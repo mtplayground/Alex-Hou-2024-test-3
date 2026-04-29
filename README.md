@@ -1,8 +1,16 @@
 # Alex-Hou-2024-test-3
 
-Initial repository setup for a Flask-based calculator application.
+A small Flask calculator app with a styled browser UI, pure JavaScript calculator logic, edge-case handling, and lightweight unit tests.
 
-## Structure
+## Features
+
+- Flask application factory exposed through `wsgi.py` for Gunicorn.
+- Responsive calculator layout with a dedicated display and button grid.
+- Pure JavaScript calculator core with left-to-right evaluation.
+- Edge-case handling for divide-by-zero, invalid sequences, recovery after errors, and compact large-number formatting.
+- Unit tests using the built-in Node test runner.
+
+## Project structure
 
 ```text
 app/
@@ -10,37 +18,113 @@ app/
   config.py
   routes.py
   static/
-    .keep
     css/
       styles.css
     js/
       calculator.js
   templates/
-    .keep
     index.html
+docs/
+  screenshots/
+    calculator-error-mobile.png
+    calculator-home.png
+    calculator-result.png
+tests/
+  calculator.test.js
 wsgi.py
 requirements.txt
 package.json
 .env.example
 Dockerfile
 docker-compose.yml
-tests/
-  calculator.test.js
 README.md
 ```
 
-## Dependencies
+## Requirements
 
-- Flask
-- gunicorn
-- python-dotenv
+- Python 3.13+
+- Node.js 22+ for the JavaScript test runner
+- Docker and Docker Compose for containerized runs
 
-## Notes
+## Environment
 
-- Environment variables are loaded with `python-dotenv` through `app/config.py`.
-- The Flask application is created through `app.create_app()` and exposed for Gunicorn in `wsgi.py`.
-- The `/` route renders `app/templates/index.html`, and Flask serves static assets from `app/static/`.
-- Core calculator state and arithmetic live in `app/static/js/calculator.js` as pure functions.
-- JavaScript unit tests run with the built-in Node test runner via `npm test`.
-- Copy `.env.example` to `.env` and adjust values for local development.
-- Docker support is included with a multi-stage `Dockerfile` and `docker-compose.yml`.
+Copy the example environment file before running the app:
+
+```bash
+cp .env.example .env
+```
+
+Default values:
+
+- `FLASK_ENV=development`
+- `HOST=0.0.0.0`
+- `PORT=8080`
+
+## Local development
+
+Install the Python dependencies:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+Start the app with Gunicorn:
+
+```bash
+gunicorn --reload --bind 0.0.0.0:8080 wsgi:app
+```
+
+Then open `http://127.0.0.1:8080`.
+
+## Docker
+
+Build and run the container directly:
+
+```bash
+docker build -t alex-hou-2024-test-3 .
+docker run --rm -p 8080:8080 --env-file .env.example alex-hou-2024-test-3
+```
+
+Or use Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+## Tests
+
+Run the JavaScript unit tests with the built-in Node test runner:
+
+```bash
+npm test
+```
+
+## Manual QA summary
+
+Manual browser QA was performed on April 29, 2026 against the live Flask app served locally on `http://127.0.0.1:8080`.
+
+Golden path verified:
+
+- `12.5 + 7.5 = 20`
+
+Edge cases verified:
+
+- `8 ÷ 0 = Error`
+- entering a digit after `Error` resets the display and starts a new input
+- repeated decimal input is ignored
+- invalid operator chaining is ignored
+- large results switch to compact scientific notation, for example `9e+11`
+
+## Screenshots
+
+Default desktop calculator:
+
+![Default calculator UI](docs/screenshots/calculator-home.png)
+
+Successful calculation result:
+
+![Calculator showing 20 after 12.5 plus 7.5](docs/screenshots/calculator-result.png)
+
+Mobile divide-by-zero error state:
+
+![Mobile calculator showing Error after divide by zero](docs/screenshots/calculator-error-mobile.png)
