@@ -20,9 +20,12 @@ app/
     index.html
 wsgi.py
 requirements.txt
+package.json
 .env.example
 Dockerfile
 docker-compose.yml
+tests/
+  calculator.test.js
 README.md
 ```
 
@@ -38,5 +41,6 @@ README.md
 - The Flask application is created through `app.create_app()` and exposed for Gunicorn in `wsgi.py`.
 - The `/` route renders `app/templates/index.html`, and Flask serves static assets from `app/static/`.
 - Core calculator state and arithmetic live in `app/static/js/calculator.js` as pure functions.
+- JavaScript unit tests run with the built-in Node test runner via `npm test`.
 - Copy `.env.example` to `.env` and adjust values for local development.
 - Docker support is included with a multi-stage `Dockerfile` and `docker-compose.yml`.
