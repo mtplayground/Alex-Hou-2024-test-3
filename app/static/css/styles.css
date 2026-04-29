@@ -1,0 +1,209 @@
+:root {
+  color-scheme: dark;
+  --page-top: #1f2a44;
+  --page-bottom: #0c1220;
+  --panel-top: rgba(14, 20, 35, 0.94);
+  --panel-bottom: rgba(9, 13, 24, 0.98);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --display-bg: rgba(255, 255, 255, 0.06);
+  --display-text: #f6f8fb;
+  --text-muted: #8fa0bc;
+  --button-bg: #182133;
+  --button-hover: #21304b;
+  --button-active: #2a3b5a;
+  --button-text: #eef3fb;
+  --operator-bg: #ff9f4a;
+  --operator-hover: #ffb166;
+  --operator-active: #f38b28;
+  --operator-text: #1e1407;
+  --clear-bg: #7f375f;
+  --clear-hover: #99466f;
+  --clear-active: #692a4e;
+  --equals-bg: #55d1ae;
+  --equals-hover: #6ce1bf;
+  --equals-active: #36b690;
+  --shadow-strong: 0 28px 60px rgba(0, 0, 0, 0.45);
+  --shadow-soft: 0 12px 24px rgba(0, 0, 0, 0.25);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(130, 176, 255, 0.24), transparent 36%),
+    linear-gradient(180deg, var(--page-top), var(--page-bottom));
+  color: var(--button-text);
+  font-family: "Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+.calculator-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1rem;
+}
+
+.calculator {
+  width: min(100%, 25rem);
+  padding: 1.5rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 1.75rem;
+  background: linear-gradient(180deg, var(--panel-top), var(--panel-bottom));
+  box-shadow: var(--shadow-strong);
+  backdrop-filter: blur(18px);
+}
+
+.calculator-header {
+  margin-bottom: 1.25rem;
+}
+
+.calculator-header h1 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.calculator-display {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 6rem;
+  margin-bottom: 1.25rem;
+  padding: 1.25rem;
+  border-radius: 1.25rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), var(--display-bg));
+  color: var(--display-text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  font-family: "IBM Plex Mono", "SFMono-Regular", "Consolas", monospace;
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.calculator-keypad {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.calculator-button {
+  min-height: 4.25rem;
+  border: 0;
+  border-radius: 1.1rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent), var(--button-bg);
+  color: var(--button-text);
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  font: inherit;
+  font-size: 1.35rem;
+  font-weight: 700;
+  transition:
+    transform 140ms ease,
+    background-color 140ms ease,
+    box-shadow 140ms ease,
+    filter 140ms ease;
+}
+
+.calculator-button:hover {
+  background-color: var(--button-hover);
+  transform: translateY(-1px);
+}
+
+.calculator-button:active {
+  background-color: var(--button-active);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.24);
+  transform: translateY(1px) scale(0.98);
+}
+
+.calculator-button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.45);
+  outline-offset: 2px;
+}
+
+.calculator-button-operator {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent),
+    var(--operator-bg);
+  color: var(--operator-text);
+}
+
+.calculator-button-operator:hover {
+  background-color: var(--operator-hover);
+}
+
+.calculator-button-operator:active {
+  background-color: var(--operator-active);
+}
+
+.calculator-button-clear {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent),
+    var(--clear-bg);
+}
+
+.calculator-button-clear:hover {
+  background-color: var(--clear-hover);
+}
+
+.calculator-button-clear:active {
+  background-color: var(--clear-active);
+}
+
+.calculator-button-equals {
+  grid-row: span 2;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent),
+    var(--equals-bg);
+  color: #072019;
+}
+
+.calculator-button-equals:hover {
+  background-color: var(--equals-hover);
+}
+
+.calculator-button-equals:active {
+  background-color: var(--equals-active);
+}
+
+.calculator-button-zero {
+  grid-column: span 2;
+}
+
+@media (max-width: 480px) {
+  .calculator-page {
+    padding: 1rem 0.75rem;
+  }
+
+  .calculator {
+    padding: 1rem;
+    border-radius: 1.5rem;
+  }
+
+  .calculator-display {
+    min-height: 5.2rem;
+    padding: 1rem;
+    font-size: clamp(2rem, 12vw, 3rem);
+  }
+
+  .calculator-keypad {
+    gap: 0.6rem;
+  }
+
+  .calculator-button {
+    min-height: 3.8rem;
+    border-radius: 0.95rem;
+    font-size: 1.2rem;
+  }
+}
