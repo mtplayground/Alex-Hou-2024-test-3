@@ -113,6 +113,57 @@
     return createCalculatorState();
   }
 
+  function applyButtonAction(state, action, value) {
+    switch (action) {
+      case "digit":
+        return inputDigit(state, String(value));
+      case "decimal":
+        return inputDecimal(state);
+      case "operator":
+        return setOperator(state, String(value));
+      case "equals":
+        return calculateResult(state);
+      case "clear":
+        return clearCalculatorState();
+      default:
+        return state;
+    }
+  }
+
+  function attachCalculator(rootNode) {
+    var root = rootNode || document;
+    var display = root.getElementById("calculator-display");
+    var keypad = root.querySelector(".calculator-keypad");
+
+    if (!display || !keypad || keypad.__calculatorBound) {
+      return null;
+    }
+
+    var state = createCalculatorState();
+    keypad.__calculatorBound = true;
+    renderDisplay(display, state);
+
+    keypad.addEventListener("click", function (event) {
+      var button = getCalculatorButton(event.target);
+
+      if (!button) {
+        return;
+      }
+
+      state = applyButtonAction(state, button.dataset.action, button.dataset.value);
+      renderDisplay(display, state);
+    });
+
+    return {
+      getState: function () {
+        return state;
+      },
+      render: function () {
+        renderDisplay(display, state);
+      },
+    };
+  }
+
   function evaluateOperation(left, operator, right) {
     switch (operator) {
       case OPERATOR_ADD:
@@ -166,6 +217,28 @@
     };
   }
 
+  function renderDisplay(display, state) {
+    display.textContent = state.currentInput;
+  }
+
+  function getCalculatorButton(target) {
+    if (!target || typeof target.closest !== "function") {
+      return null;
+    }
+
+    return target.closest("button[data-action]");
+  }
+
+  if (typeof document !== "undefined") {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", function () {
+        attachCalculator(document);
+      });
+    } else {
+      attachCalculator(document);
+    }
+  }
+
   return {
     OPERATOR_ADD: OPERATOR_ADD,
     OPERATOR_SUBTRACT: OPERATOR_SUBTRACT,
@@ -181,6 +254,8 @@
     setOperator: setOperator,
     calculateResult: calculateResult,
     clearCalculatorState: clearCalculatorState,
+    applyButtonAction: applyButtonAction,
+    attachCalculator: attachCalculator,
     evaluateOperation: evaluateOperation,
   };
 });
