@@ -92,6 +92,10 @@ body {
   overflow-wrap: anywhere;
 }
 
+.calculator-display[data-state="error"] {
+  color: #ff8f9d;
+}
+
 .calculator-keypad {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
