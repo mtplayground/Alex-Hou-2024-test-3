@@ -1,0 +1,8 @@
+{
+  "name": "alex-hou-2024-test-3",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test"
+  }
+}
