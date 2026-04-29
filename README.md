@@ -12,6 +12,7 @@ app/
   templates/
     .keep
 requirements.txt
+.env.example
 README.md
 ```
 
@@ -24,4 +25,6 @@ README.md
 ## Notes
 
 - This issue establishes the Python project layout only.
-- Application configuration, app factory wiring, routes, templates, and Docker support are implemented in later issues.
+- Environment variables are loaded with `python-dotenv` through `app/config.py`.
+- Copy `.env.example` to `.env` and adjust values for local development.
+- Application factory wiring, routes, templates, and Docker support are implemented in later issues.
