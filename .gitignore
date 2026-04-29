@@ -1,5 +1,9 @@
 target/
 node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
 .gh_token
 .claude/
 .database_url
