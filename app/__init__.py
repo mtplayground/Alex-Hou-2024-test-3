@@ -5,6 +5,7 @@ from __future__ import annotations
 from flask import Flask
 
 from .config import AppConfig, get_config, load_environment
+from .routes import main_blueprint
 
 
 def create_app() -> Flask:
@@ -13,8 +14,15 @@ def create_app() -> Flask:
     load_environment()
     config = get_config()
 
-    app = Flask(__name__, instance_relative_config=False)
+    app = Flask(
+        __name__,
+        instance_relative_config=False,
+        static_folder="static",
+        template_folder="templates",
+        static_url_path="/static",
+    )
     app.config.from_mapping(_build_flask_config(config))
+    app.register_blueprint(main_blueprint)
 
     return app
 
