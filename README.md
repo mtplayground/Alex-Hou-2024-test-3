@@ -11,6 +11,10 @@ app/
   routes.py
   static/
     .keep
+    css/
+      styles.css
+    js/
+      calculator.js
   templates/
     .keep
     index.html
@@ -33,5 +37,6 @@ README.md
 - Environment variables are loaded with `python-dotenv` through `app/config.py`.
 - The Flask application is created through `app.create_app()` and exposed for Gunicorn in `wsgi.py`.
 - The `/` route renders `app/templates/index.html`, and Flask serves static assets from `app/static/`.
+- Core calculator state and arithmetic live in `app/static/js/calculator.js` as pure functions.
 - Copy `.env.example` to `.env` and adjust values for local development.
 - Docker support is included with a multi-stage `Dockerfile` and `docker-compose.yml`.
