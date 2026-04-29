@@ -6,9 +6,57 @@
     <title>Calculator</title>
   </head>
   <body>
-    <main>
-      <h1>Calculator</h1>
-      <p>The calculator interface will be implemented in the next issues.</p>
+    <main class="calculator-page">
+      <section class="calculator" aria-label="Calculator">
+        <header class="calculator-header">
+          <h1>Calculator</h1>
+        </header>
+
+        <output
+          id="calculator-display"
+          class="calculator-display"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          0
+        </output>
+
+        <div class="calculator-keypad" aria-label="Calculator controls">
+          <button type="button" class="calculator-button calculator-button-clear" data-action="clear">
+            C
+          </button>
+          <button type="button" class="calculator-button calculator-button-operator" data-action="operator" data-value="divide" aria-label="Divide">
+            ÷
+          </button>
+          <button type="button" class="calculator-button calculator-button-operator" data-action="operator" data-value="multiply" aria-label="Multiply">
+            ×
+          </button>
+          <button type="button" class="calculator-button calculator-button-operator" data-action="operator" data-value="subtract" aria-label="Subtract">
+            −
+          </button>
+
+          <button type="button" class="calculator-button" data-action="digit" data-value="7">7</button>
+          <button type="button" class="calculator-button" data-action="digit" data-value="8">8</button>
+          <button type="button" class="calculator-button" data-action="digit" data-value="9">9</button>
+          <button type="button" class="calculator-button calculator-button-operator" data-action="operator" data-value="add" aria-label="Add">
+            +
+          </button>
+
+          <button type="button" class="calculator-button" data-action="digit" data-value="4">4</button>
+          <button type="button" class="calculator-button" data-action="digit" data-value="5">5</button>
+          <button type="button" class="calculator-button" data-action="digit" data-value="6">6</button>
+          <button type="button" class="calculator-button calculator-button-equals" data-action="equals">
+            =
+          </button>
+
+          <button type="button" class="calculator-button" data-action="digit" data-value="1">1</button>
+          <button type="button" class="calculator-button" data-action="digit" data-value="2">2</button>
+          <button type="button" class="calculator-button" data-action="digit" data-value="3">3</button>
+
+          <button type="button" class="calculator-button calculator-button-zero" data-action="digit" data-value="0">0</button>
+          <button type="button" class="calculator-button" data-action="decimal" data-value=".">.</button>
+        </div>
+      </section>
     </main>
   </body>
 </html>
