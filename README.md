@@ -7,10 +7,12 @@ Initial repository setup for a Flask-based calculator application.
 ```text
 app/
   __init__.py
+  config.py
   static/
     .keep
   templates/
     .keep
+wsgi.py
 requirements.txt
 .env.example
 Dockerfile
@@ -26,8 +28,7 @@ README.md
 
 ## Notes
 
-- This issue establishes the Python project layout only.
 - Environment variables are loaded with `python-dotenv` through `app/config.py`.
+- The Flask application is created through `app.create_app()` and exposed for Gunicorn in `wsgi.py`.
 - Copy `.env.example` to `.env` and adjust values for local development.
 - Docker support is included with a multi-stage `Dockerfile` and `docker-compose.yml`.
-- The container command targets a Gunicorn WSGI entrypoint that will be added in the later Flask app wiring issue.
