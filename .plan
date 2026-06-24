@@ -22,12 +22,12 @@ Issue dependency plan
    - Confirm `app/` is still copied with `static/` and `templates/`.
    - Validate Gunicorn can import `wsgi:app`.
 2. Issue #25 (static resource paths) depends on a working Flask app and focuses on browser assets.
-   - Keep Flask static configuration at `/static`.
+   - Keep Flask static files under `app/static/` while serving them from the `/assets` URL prefix to avoid production proxy conflicts.
    - Use `url_for('static', filename='css/styles.css')` and `url_for('static', filename='js/calculator.js')` in templates.
    - Verify CSS/JS routes return 200 with appropriate content types.
 3. Issue #26 (deployment smoke verification and README update) depends on #24 and #25.
    - Document that the app must be accessed through Flask/Gunicorn at `http://127.0.0.1:8080`.
-   - Add/describe lightweight smoke checks for `/`, `/static/css/styles.css`, and `/static/js/calculator.js`.
+   - Add/describe lightweight smoke checks for `/`, `/assets/css/styles.css`, and `/assets/js/calculator.js`.
 
 Key design decisions
 - Keep the app server-rendered with Flask templates; no SPA/router/auth/email/database layer is needed for these issues.

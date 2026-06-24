@@ -19,7 +19,7 @@ def create_app() -> Flask:
         instance_relative_config=False,
         static_folder="static",
         template_folder="templates",
-        static_url_path="/static",
+        static_url_path="/assets",
     )
     app.config.from_mapping(_build_flask_config(config))
     app.register_blueprint(main_blueprint)
