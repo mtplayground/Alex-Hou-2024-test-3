@@ -27,6 +27,7 @@ RUN adduser --disabled-password --gecos "" appuser
 
 COPY --from=builder /opt/venv /opt/venv
 COPY app ./app
+COPY wsgi.py ./wsgi.py
 COPY .env.example ./.env.example
 
 USER appuser
