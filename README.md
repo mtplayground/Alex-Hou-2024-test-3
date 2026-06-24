@@ -29,8 +29,11 @@ docs/
     calculator-error-mobile.png
     calculator-home.png
     calculator-result.png
+scripts/
+  smoke_check.sh
 tests/
   calculator.test.js
+  test_static_assets.py
 wsgi.py
 requirements.txt
 package.json
@@ -76,6 +79,25 @@ gunicorn --reload --bind 0.0.0.0:8080 wsgi:app
 
 Then open `http://127.0.0.1:8080`.
 
+Important: always access the calculator through Flask/Gunicorn at
+`http://127.0.0.1:8080`. Do not open `app/templates/index.html` directly in a
+browser; direct file access bypasses Flask's static URL generation and can show
+an unstyled or scriptless page.
+
+## Deployment smoke check
+
+After installing dependencies, run the lightweight smoke check:
+
+```bash
+scripts/smoke_check.sh
+```
+
+The script starts `gunicorn --bind 0.0.0.0:8080 wsgi:app` and verifies:
+
+- `GET /` returns rendered HTML with status `200`
+- `GET /static/css/styles.css` returns status `200`
+- `GET /static/js/calculator.js` returns status `200`
+
 ## Docker
 
 Build and run the container directly:
@@ -97,6 +119,12 @@ Run the JavaScript unit tests with the built-in Node test runner:
 
 ```bash
 npm test
+```
+
+Run the Flask static asset smoke tests:
+
+```bash
+python -m unittest discover -s tests -p 'test_*.py'
 ```
 
 ## Manual QA summary
