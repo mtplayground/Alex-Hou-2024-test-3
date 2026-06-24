@@ -56,7 +56,7 @@ assert_http_200() {
 }
 
 assert_http_200 "/"
-assert_http_200 "/static/css/styles.css"
-assert_http_200 "/static/js/calculator.js"
+assert_http_200 "/assets/css/styles.css"
+assert_http_200 "/assets/js/calculator.js"
 
 echo "Smoke check passed for ${BASE_URL}"

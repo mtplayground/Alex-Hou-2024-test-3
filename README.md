@@ -95,8 +95,8 @@ scripts/smoke_check.sh
 The script starts `gunicorn --bind 0.0.0.0:8080 wsgi:app` and verifies:
 
 - `GET /` returns rendered HTML with status `200`
-- `GET /static/css/styles.css` returns status `200`
-- `GET /static/js/calculator.js` returns status `200`
+- `GET /assets/css/styles.css` returns status `200`
+- `GET /assets/js/calculator.js` returns status `200`
 
 ## Docker
 

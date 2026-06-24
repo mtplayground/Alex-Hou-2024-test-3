@@ -19,12 +19,12 @@ class StaticAssetPathTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         html = response.get_data(as_text=True)
-        self.assertIn('href="/static/css/styles.css"', html)
-        self.assertIn('src="/static/js/calculator.js"', html)
+        self.assertIn('href="/assets/css/styles.css"', html)
+        self.assertIn('src="/assets/js/calculator.js"', html)
 
     def test_static_assets_are_served_with_expected_content_types(self) -> None:
-        css_response = self.client.get("/static/css/styles.css")
-        js_response = self.client.get("/static/js/calculator.js")
+        css_response = self.client.get("/assets/css/styles.css")
+        js_response = self.client.get("/assets/js/calculator.js")
 
         css_response.get_data()
         js_response.get_data()
