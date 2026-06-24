@@ -33,30 +33,45 @@ done
 
 assert_http_200() {
   local path="$1"
+  local expected_content_type_prefix="${2:-}"
   local output_file
+  local headers_file
   output_file="$(mktemp)"
+  headers_file="$(mktemp)"
   local status
-  status="$(curl -sS -o "$output_file" -w "%{http_code}" "${BASE_URL}${path}")"
+  status="$(curl -sS -D "$headers_file" -o "$output_file" -w "%{http_code}" "${BASE_URL}${path}")"
 
   if [ "$status" != "200" ]; then
     echo "Expected ${path} to return 200, got ${status}." >&2
     cat "$output_file" >&2
     rm -f "$output_file"
+    rm -f "$headers_file"
     exit 1
   fi
 
   if [ "$path" = "/" ] && ! grep -qi "<!doctype html" "$output_file"; then
     echo "Expected / to return rendered HTML." >&2
     rm -f "$output_file"
+    rm -f "$headers_file"
+    exit 1
+  fi
+
+  if [ -n "$expected_content_type_prefix" ] \
+    && ! grep -Eiq "^content-type: ${expected_content_type_prefix}" "$headers_file"; then
+    echo "Expected ${path} Content-Type to start with ${expected_content_type_prefix}." >&2
+    cat "$headers_file" >&2
+    rm -f "$output_file"
+    rm -f "$headers_file"
     exit 1
   fi
 
   rm -f "$output_file"
+  rm -f "$headers_file"
   echo "OK ${path} returned 200"
 }
 
 assert_http_200 "/"
-assert_http_200 "/assets/css/styles.css"
-assert_http_200 "/assets/js/calculator.js"
+assert_http_200 "/assets/css/styles.css" "text/css"
+assert_http_200 "/assets/js/calculator.js" "(text|application)/javascript"
 
 echo "Smoke check passed for ${BASE_URL}"

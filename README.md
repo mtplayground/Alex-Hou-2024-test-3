@@ -98,6 +98,10 @@ The script starts `gunicorn --bind 0.0.0.0:8080 wsgi:app` and verifies:
 - `GET /assets/css/styles.css` returns status `200`
 - `GET /assets/js/calculator.js` returns status `200`
 
+The Flask app keeps asset files in `app/static/`, but serves them from the
+`/assets` URL prefix so production proxies that reserve `/static` do not
+intercept calculator CSS or JavaScript.
+
 ## Docker
 
 Build and run the container directly:
