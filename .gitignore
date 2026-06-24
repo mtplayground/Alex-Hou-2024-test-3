@@ -6,6 +6,8 @@ __pycache__/
 venv/
 .env
 !.env.example
+.env.production
+.authemail_decision
 .gh_token
 .claude/
 .database_url

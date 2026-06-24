@@ -1,84 +1,37 @@
-Architecture plan for `mtplayground/Alex-Hou-2024-test-3`
+Architecture plan for issues #24, #25, and #26
 
-Goal
-- Build a small Flask-based calculator app with server-rendered HTML, static CSS/JavaScript, Docker-based local execution, and targeted unit coverage for calculator logic.
+Project shape
+- Small Flask calculator app served by Gunicorn through `wsgi.py`.
+- Python app package lives under `app/`:
+  - `app/__init__.py`: Flask application factory and registration.
+  - `app/config.py`: environment-backed configuration.
+  - `app/routes.py`: page route(s), currently the calculator landing page.
+  - `app/templates/index.html`: rendered browser UI.
+  - `app/static/css/styles.css`: calculator styling.
+  - `app/static/js/calculator.js`: calculator behavior.
+- Deployment/runtime files:
+  - `wsgi.py`: Gunicorn import target.
+  - `Dockerfile`: container build and runtime entrypoint.
+  - `docker-compose.yml`: local container orchestration.
+  - `requirements.txt`: Flask/Gunicorn/python-dotenv dependencies.
+  - `package.json` and `tests/calculator.test.js`: Node-based JS unit tests.
 
-Module structure
-- `app/`
-  - `__init__.py`: Flask application factory, configuration loading, blueprint/template/static registration.
-  - `routes.py`: index route returning the calculator page.
-  - `config.py`: environment-aware config object and helpers for reading env vars.
-- `templates/`
-  - `base.html`: minimal shared document shell if needed.
-  - `index.html`: calculator markup and script/style includes.
-- `static/`
-  - `css/styles.css`: calculator layout, spacing, colors, states, responsive rules.
-  - `js/calculator.js`: pure calculator state machine plus DOM event wiring.
-- `tests/`
-  - `js/calculator.test.js`: unit tests for core calculator behavior and edge cases.
-- Project root
-  - `run.py` or `wsgi.py`: local/dev entrypoint that creates the app.
-  - `requirements.txt`: Flask and any minimal runtime dependencies.
-  - `package.json`: JavaScript test tooling only, if Vitest or similar is used for Issue #11.
-  - `Dockerfile`
-  - `docker-compose.yml`
-  - `.env.example`: documented environment variables without secrets.
-
-Shared types and boundaries
-- Keep the browser calculator logic centered on a single plain JavaScript state object:
-  - `displayValue`
-  - `storedValue`
-  - `pendingOperator`
-  - `waitingForOperand`
-  - `error`
-- Represent calculator button actions with stable identifiers such as `digit`, `decimal`, `operator`, `equals`, `clear`, and `sign`.
-- Keep Flask thin:
-  - Flask serves HTML and static assets.
-  - All calculator behavior lives in client-side JavaScript.
-  - Tests in Issue #11 target pure calculator functions, not DOM-heavy code where avoidable.
-
-Issue dependencies
-- `#1` initializes the Python package and basic folders.
-- `#2` adds config loading used by `#4`, `#3`, and local execution.
-- `#3` depends on the project structure from `#1` and config conventions from `#2`.
-- `#4` depends on `#1` and should consume config from `#2`.
-- `#5` depends on the app factory and entrypoint from `#4`.
-- `#6` and `#7` depend on `#5` because the template structure should exist before markup and styling are finalized.
-- `#8` should define the pure calculator logic before `#9` wires DOM events to it.
-- `#9` depends on `#6` and `#8`.
-- `#10` extends `#8` and `#9` with invalid-state handling and display recovery rules.
-- `#11` depends on the logic surface from `#8` and the error behavior from `#10`.
-- `#12` depends on all prior issues and should finalize README usage instructions alongside manual verification.
+Issue dependency plan
+1. Issue #24 (Dockerfile missing `wsgi.py`) is the container startup blocker.
+   - Ensure runtime image copies `wsgi.py` alongside `app/`.
+   - Confirm `app/` is still copied with `static/` and `templates/`.
+   - Validate Gunicorn can import `wsgi:app`.
+2. Issue #25 (static resource paths) depends on a working Flask app and focuses on browser assets.
+   - Keep Flask static configuration at `/static`.
+   - Use `url_for('static', filename='css/styles.css')` and `url_for('static', filename='js/calculator.js')` in templates.
+   - Verify CSS/JS routes return 200 with appropriate content types.
+3. Issue #26 (deployment smoke verification and README update) depends on #24 and #25.
+   - Document that the app must be accessed through Flask/Gunicorn at `http://127.0.0.1:8080`.
+   - Add/describe lightweight smoke checks for `/`, `/static/css/styles.css`, and `/static/js/calculator.js`.
 
 Key design decisions
-- Use the Flask application factory pattern from the start so later config and testing changes do not require restructuring.
-- Keep environment configuration minimal and explicit:
-  - `FLASK_ENV`
-  - `SECRET_KEY`
-  - `HOST`
-  - `PORT`
-- Prefer progressive enhancement over server complexity:
-  - server-render the page once
-  - run calculator interactions entirely in the browser
-- Keep calculator logic testable by separating pure operations from DOM updates.
-- Start with standard arithmetic and explicit edge-case behavior:
-  - divide-by-zero should show a user-facing error state
-  - invalid chained operators should resolve predictably instead of corrupting state
-  - clear should fully reset state
-- Keep Docker simple:
-  - one app container
-  - optional compose service for local convenience
-  - no database or extra services unless a later issue requires them
-
-Recommended implementation order
-- `#1 -> #2 -> #4 -> #5`
-- `#6 -> #7`
-- `#8 -> #9 -> #10 -> #11`
-- `#3` can be done after `#2` once the runtime contract is clear, but before final QA.
-- `#12` closes the work with manual verification and README finalization.
-
-Cross-issue notes
-- Define the HTML element IDs/classes in `#6` with the future JavaScript hooks in mind so `#9` does not need template rewrites.
-- Keep CSS selectors predictable and low-specificity in `#7` so error and active states from `#10` can be added cleanly.
-- In `#8`, expose pure functions such as `inputDigit`, `inputDecimal`, `performOperation`, `calculateResult`, and `resetCalculator`; `#9` should call them rather than duplicating logic in click handlers.
-- In `#11`, focus tests on arithmetic sequencing, decimal entry, repeated equals behavior if supported, clear/reset behavior, and error recovery after invalid operations.
+- Keep the app server-rendered with Flask templates; no SPA/router/auth/email/database layer is needed for these issues.
+- Keep calculator logic in static JavaScript and test it with Node's built-in test runner.
+- Keep deployment entrypoint as `gunicorn --bind ${HOST:-0.0.0.0}:${PORT:-8080} wsgi:app`.
+- Avoid hard-coded relative static paths in templates so deployment behind a proxy or from different current paths does not break assets.
+- Treat Docker and Gunicorn smoke checks as deployment validation; Node tests remain focused on calculator behavior.
